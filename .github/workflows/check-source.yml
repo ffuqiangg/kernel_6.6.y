@@ -1,0 +1,40 @@
+name: Check Soures
+
+env:
+  REPO_URL: https://github.com/unifreq/linux-6.6.y
+  REPO_BRANCH: main
+
+on:
+  schedule:
+    - cron: 0 17 * * *
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get Commit Hash
+      id: getHash
+      run: |
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
+        echo "commitHash=$(git rev-parse HEAD)" >> ${GITHUB_ENV}
+
+    - name: Compare Commit Hash
+      id: cacheHash
+      uses: actions/cache@v4
+      with:
+        path: .commitHash
+        key: HEAD-${{ env.commitHash }}
+
+    - name: Save New Commit Hash
+      if: steps.cacheHash.outputs.cache-hit != 'true'
+      run: |
+        echo ${{ env.commitHash }} | tee .commitHash
+
+    - name: Trigger build
+      if: steps.cacheHash.outputs.cache-hit != 'true'
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        event-type: compile-kernel
+        client-payload: '{"kernel_version": "6.6.1", "kernel_auto": "true"}'
