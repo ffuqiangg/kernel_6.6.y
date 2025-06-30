@@ -88,6 +88,8 @@ jobs:
           kernel_source: unifreq
           kernel_toolchain: gcc
           compress_format: xz
+          delete_source: true
+          silent_log: true
 
       - name: Upload Kernel to Release
         uses: ncipollo/release-action@main
