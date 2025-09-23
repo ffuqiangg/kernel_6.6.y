@@ -46,8 +46,6 @@ jobs:
           sudo sed -i '/NVM_DIR/d;/skel/d' /root/{.bashrc,.profile}
           sudo rm -rf ~/{.cargo,.dotnet,.rustup}
           sudo timedatectl set-timezone "${TZ}"
-          sudo -E apt-get install ntpdate
-          sudo -E ntpdate pool.ntp.org
           echo "KERNEL_VERSION=${{ github.event.client_payload.kernel_version }}" >> ${GITHUB_ENV}
           echo "KERNEL_AUTO=${{ github.event.client_payload.kernel_auto }}" >> ${GITHUB_ENV}
           if [[ "${{ github.event_name }}" == 'workflow_dispatch' ]]; then
@@ -104,6 +102,7 @@ jobs:
           allowUpdates: true
           removeArtifacts: false
           replacesArtifacts: true
+          makeLatest: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Telegram notification
