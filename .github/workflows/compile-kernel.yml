@@ -69,6 +69,18 @@ jobs:
           sudo mkdir -p /builder
           sudo mount /dev/github/runner /builder
           sudo chown -R runner.runner /builder
+          # Prepare cached directory
+          echo "Check existing Runner.Worker process..."
+          ps aux | grep -i Runner.Worker | grep -v grep
+          echo "Check existing actions.runner services..."
+          systemctl --type=service --no-legend | grep -i actions.runner || true
+          echo "Stopping existing actions.runner services..."
+          sudo systemctl stop actions.runner.*.service || true
+          rm -rf /home/runner/actions-runner/cached
+          sudo mkdir -p /builder/cached/_diag
+          sudo ln -sf /builder/cached /home/runner/actions-runner/cached
+          echo "Starting actions.runner services..."
+          sudo systemctl start actions.runner.*.service || true
           df -Th
 
       - name: Create a mapped directory
