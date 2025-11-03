@@ -100,7 +100,7 @@ jobs:
           kernel_package: all
           kernel_sign: -ffuqiangg
           kernel_source: unifreq
-          kernel_toolchain: clang
+          kernel_toolchain: gcc
           compress_format: xz
           delete_source: true
           silent_log: true
