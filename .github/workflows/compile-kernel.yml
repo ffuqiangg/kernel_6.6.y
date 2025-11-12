@@ -17,11 +17,11 @@ on:
         type: boolean
 
 env:
-  TZ: Asia/Shanghai
+  TZ: Etc/UTC
 
 jobs:
   build:
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-24.04-arm
     if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
 
     steps:
