@@ -18,6 +18,7 @@ on:
 
 env:
   TZ: Etc/UTC
+  CCACHE_DIR: /builder/ccache
 
 jobs:
   build:
@@ -91,9 +92,18 @@ jobs:
         working-directory: /builder
         run: |
           df -hT ${PWD}
-          mkdir -p /builder/{kernel,output}
+          mkdir -p /builder/{kernel,output.ccache}
           ln -sf /builder/kernel /home/runner/work/_actions/ophub/amlogic-s9xxx-armbian/main/compile-kernel/kernel
           ln -sf /builder/output /home/runner/work/_actions/ophub/amlogic-s9xxx-armbian/main/compile-kernel/output
+          ln -sf /builder/ccache /home/runner/.ccache
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: /builder/ccache
+          key: kernel-${{ inputs.kernel_version }}-gcc-${{ github.sha }}
+          restore-keys: |
+            kernel-${{ inputs.kernel_version }}-gcc-
 
       - name: Compile the kernel
         uses: ophub/amlogic-s9xxx-armbian@main
@@ -105,9 +115,9 @@ jobs:
           kernel_sign: -ffuqiangg
           kernel_source: unifreq
           kernel_toolchain: gcc
-          compress_format: xz
           delete_source: true
           silent_log: true
+          ccache_clear: false
 
       - name: Upload Kernel to Release
         uses: ncipollo/release-action@main
