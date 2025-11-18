@@ -91,13 +91,13 @@ jobs:
         run: |
           # Get the latest source hash from the kernel repository
           api_url="https://api.github.com/repos/unifreq/linux-${{ inputs.kernel_version }}/git/ref/heads/main"
-          source_hash=$(curl -fsSL -m 10 \
+          source_hash=$(curl -fsSL -m 20 \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            ${api_url} |
-            jq -r '.object.sha'
+            ${api_url} | jq -r '.object.sha'
           )
           [[ -z "${source_hash}" || "${source_hash}" == "null" ]] && source_hash="${{ github.sha }}"
+          echo "source_hash=${source_hash}" >> ${GITHUB_ENV}
 
       - name: Cache ccache
         uses: actions/cache@v4
@@ -118,7 +118,6 @@ jobs:
           kernel_source: unifreq
           kernel_toolchain: gcc
           delete_source: true
-          silent_log: true
           ccache_clear: false
 
       - name: Upload Kernel to Release
