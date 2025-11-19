@@ -103,9 +103,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /builder/ccache
-          key: kernel-gcc-${{ inputs.kernel_version }}-${{ env.source_hash }}
+          key: kernel-host-gcc-${{ inputs.kernel_version }}-${{ env.source_hash }}
           restore-keys: |
-            kernel-gcc-${{ inputs.kernel_version }}-
+            kernel-host-gcc-${{ inputs.kernel_version }}-
 
       - name: Compile the kernel
         uses: ophub/amlogic-s9xxx-armbian@main
