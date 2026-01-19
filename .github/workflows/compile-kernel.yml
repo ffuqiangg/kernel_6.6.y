@@ -109,6 +109,8 @@ jobs:
           kernel_toolchain: gcc
           delete_source: true
           ccache_clear: false
+          docker_hostpath: /builder
+          docker_image: ophub/armbian-trixie:arm64
 
       - name: Upload Kernel to Release
         uses: ncipollo/release-action@main
