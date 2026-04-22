@@ -35,6 +35,5 @@ jobs:
       if: steps.cacheHash.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@v3
       with:
-        token: ${{ secrets.GH_TOKEN }}
         event-type: compile-kernel
         client-payload: '{"kernel_version": "6.6.1", "kernel_auto": "true"}'
